@@ -12,47 +12,70 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 globals()['video_category'] ='فیلم و سینما'
 globals()['chanel_name'] = "https://www.namasha.com/TinTama"
+globals()['username_ifilo'] = 'momtaa'
+globals()['password_ifilo'] = 'test123321'
+
 
 # %% upload
 class TestUpload:
+
     def setup_method(self, method):
-        self.driver = webdriver.Chrome('Driver/')
+        self.driver = webdriver.Chrome('Driver/chromedriver109.exe')
         self.vars = {}
 
     def teardown_method(self, method):
         self.driver.quit()
 
-    def test_upload(self):
+    def test_upload(self, video_data: dict):
         # Test name: upload
         # Step # | name | target | value
         # 1 | open | /upload |
-        self.driver.get("https://www.namasha.com/upload")
+        try:
+            self.driver.get("https://ifilo.net/login")
+        except:
+            print('Error === 101')
+            return None
+        # login
+        user_selector = 'body > div:nth-child(1) > article > section > div:nth-child(2) > form > div:nth-child(1) > input'
+        self.driver.find_element(By.CSS_SELECTOR, user_selector).send_keys(globals()['username_ifilo'])
+        pass_selector = '#password'
+        self.driver.find_element(By.CSS_SELECTOR, pass_selector).send_keys(globals()['password_ifilo'])
+        self.driver.find_element(By.CSS_SELECTOR, 'body > div:nth-child(1) > article > section > div:nth-child(2) > form > button').click()
+
+        # upload
+        self.driver.get('https://ifilo.net/upload')
         # 2 | setWindowSize | 564x708 |
         self.driver.set_window_size(564, 708)
         # 3 | click | id=tablistItem2 |
         self.driver.find_element(By.ID, "tablistItem2").click()
         # 4 | click | name=tVideoUrl |
-        self.driver.find_element(By.NAME, "tVideoUrl").click()
+        self.driver.find_element(By.NAME, "tVideoUrl").clear()
         # 5 | type | name=tVideoUrl | https://www.namasha.com/videos/dl/7394578709-1080p/%D9%81%DB%8C%D9%84%D9%85-%D8%B4%D9%85%D8%A7-%D9%85%D8%B1%D8%AF%D9%85-%D8%A8%D8%A7-%D8%B2%DB%8C%D8%B1%D9%86%D9%88%DB%8C%D8%B3-%D9%81%D8%A7%D8%B1%D8%B3%DB%8C-You-People-2023-1080p.mp4
-        self.driver.find_element(By.NAME, "tVideoUrl").send_keys(
-            "https://www.namasha.com/videos/dl/7394578709-1080p/%D9%81%DB%8C%D9%84%D9%85-%D8%B4%D9%85%D8%A7-%D9%85%D8%B1%D8%AF%D9%85-%D8%A8%D8%A7-%D8%B2%DB%8C%D8%B1%D9%86%D9%88%DB%8C%D8%B3-%D9%81%D8%A7%D8%B1%D8%B3%DB%8C-You-People-2023-1080p.mp4")
+        self.driver.find_element(By.NAME, "tVideoUrl").send_keys(video_data['down_url'])
         # 6 | click | id=startUrlUpload |
         self.driver.find_element(By.ID, "startUrlUpload").click()
         # 7 | click | css=.ng-invalid |
-        self.driver.find_element(By.CSS_SELECTOR, ".ng-invalid").click()
+        self.driver.find_element(By.CSS_SELECTOR, ".ng-invalid").clear()
         # 8 | type | css=.ng-valid-maxlength | عنوان
-        self.driver.find_element(By.CSS_SELECTOR, ".ng-valid-maxlength").send_keys("عنوان")
+        self.driver.find_element(By.CSS_SELECTOR, ".ng-valid-maxlength").send_keys(video_data['title'])
         # 9 | click | css=.post-category > .ng-pristine |
-        self.driver.find_element(By.CSS_SELECTOR, ".post-category > .ng-pristine").click()
+        while True:
+            if '100' in self.driver.find_element(By.CSS_SELECTOR, "#uploadPrg > div.number-pb-num").text:
+                break
+            time.sleep(4)
+            if '' == self.driver.find_element(By.CSS_SELECTOR, "#uploadPrg > div.number-pb-num").text:
+                return None
+
         # 10 | select | css=.post-category > .ng-untouched | label=فیلم و سینما
         dropdown = self.driver.find_element(By.CSS_SELECTOR, ".post-category > .ng-untouched")
-        dropdown.find_element(By.XPATH, "//option[. = 'فیلم و سینما']").click()
+        dropdown.find_element(By.XPATH, "//option[. = '{}']".format(video_data['category'])).click()
         # 11 | click | css=.bf > .ng-pristine |
-        self.driver.find_element(By.CSS_SELECTOR, ".bf > .ng-pristine").click()
+        self.driver.find_element(By.CSS_SELECTOR, "#basicField > div:nth-child(3) > div > textarea").clear()
         # 12 | type | css=.ng-valid-parse:nth-child(1) | توضیحات فیلم
-        self.driver.find_element(By.CSS_SELECTOR, ".ng-valid-parse:nth-child(1)").send_keys("توضیحات فیلم")
+        self.driver.find_element(By.CSS_SELECTOR, "#basicField > div:nth-child(3) > div > textarea").send_keys(video_data['des'])
         # 13 | click | css=.number-pb-num |
-        self.driver.find_element(By.CSS_SELECTOR, ".number-pb-num").click()
+        # self.driver.find_element(By.CSS_SELECTOR, ".number-pb-num").click()
+
         # 14 | click | css=.\_fit |
         self.driver.find_element(By.CSS_SELECTOR, ".\\_fit").click()
         # 15 | click | css=.ng-binding |
@@ -61,6 +84,7 @@ class TestUpload:
         self.driver.find_element(By.CSS_SELECTOR, ".co-m12 > p").click()
         # 17 | close |  |
         self.driver.close()
+
 
 # %% video
 class TestSaveurl:
@@ -141,15 +165,20 @@ def main():
     # ============================== export url video
     self = TestSaveurl()
     self.setup_method(None)
-
     video_urls = self.test_saveurl(globals()['chanel_name'])
     self.teardown_method(None)
+
+    # =========================== up
+    self = TestUpload()
+    # ===========================
 
     for video_url in video_urls:
         self.setup_method(None)
         video_data = self.export_video_data(video_url)
         self.teardown_method(None)
     # ============================== upload video
+        self.setup_method(None)
+        self.test_upload(video_data)
 
 
 
