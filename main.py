@@ -2,6 +2,7 @@
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+import tkinter as tk
 
 s = False
 
@@ -159,9 +160,12 @@ def main(s):
     self.setup_method(None)
     video_urls = self.test_saveurl(globals()['chanel_name'])
     self.teardown_method(None)
+    if video_urls is None:
+        print('url npt valid')
+        return None
 
     # =========================== up
-    self = TestUpload()
+    self1 = TestUpload()
     # ===========================
 
     for video_url in video_urls:
@@ -169,24 +173,58 @@ def main(s):
         video_data = self.export_video_data(video_url)
         self.teardown_method(None)
     # ============================== upload video
-        self.setup_method(None)
-        self.test_upload(video_data)
+        self1.setup_method(None)
+        self1.test_upload(video_data)
 
 
 # %% code
 if __name__ == '__main__':
-
-    globals()['chanel_name'] = input('Enter url of chanel : ')
-    globals()['video_category'] = input('Enter category of videos : ')
-    globals()['username_ifilo'] = 'momtaa'
-    globals()['password_ifilo'] = 'test123321'
-
-    main(True)
-
-
-
-else:
     globals()['video_category'] = 'فیلم و سینما'
     globals()['chanel_name'] = "https://www.namasha.com/TinTama"
     globals()['username_ifilo'] = 'momtaa'
     globals()['password_ifilo'] = 'test123321'
+
+    root = tk.Tk()
+    root.title("sMs bot")
+
+    def submit():
+        global root
+        globals()['video_category'] = name_var.get()
+        globals()['chanel_name'] = passw_var.get()
+
+        print("The name is : " + globals()['video_category'])
+        print("The password is : " + globals()['chanel_name'])
+
+        name_var.set("")
+        passw_var.set("")
+        root.destroy()
+        # root.quit()
+
+    name_var = tk.StringVar()
+    passw_var = tk.StringVar()
+
+    name_label = tk.Label(root, text='Chanel URL : ', font=('calibre', 10, 'bold'))
+    # creating a entry for input
+    # name using widget Entry
+    name_entry = tk.Entry(root, textvariable=name_var, font=('calibre', 10, 'normal'))
+    # creating a label for password
+    passw_label = tk.Label(root, text='Category : ', font=('calibre', 10, 'bold'))
+    # creating a entry for password
+    passw_entry = tk.Entry(root, textvariable=passw_var, font=('calibre', 10, 'normal'))
+    # creating a button using the widget
+    # Button that will call the submit function
+    sub_btn = tk.Button(root, text='Submit', command=submit)
+    # placing the label and entry in
+    # the required position using grid
+    # method
+    name_label.grid(row=0, column=0)
+    name_entry.grid(row=0, column=1)
+    passw_label.grid(row=1, column=0)
+    passw_entry.grid(row=1, column=1)
+    sub_btn.grid(row=2, column=1)
+    # performing an infinite loop
+    # for the window to display
+
+    root.mainloop()
+
+    main(True)
