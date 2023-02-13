@@ -4,16 +4,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 s = False
-if s:
-    globals()['video_category'] ='فیلم و سینما'
-    globals()['chanel_name'] = "https://www.namasha.com/TinTama"
-    globals()['username_ifilo'] = 'momtaa'
-    globals()['password_ifilo'] = 'test123321'
-else:
-    globals()['chanel_name'] = input('Enter url of chanel : ')
-    globals()['video_category'] = input('Enter category of videos : ')
-    globals()['username_ifilo'] = 'momtaa'
-    globals()['password_ifilo'] = 'test123321'
 
 # %% upload
 class TestUpload:
@@ -185,5 +175,18 @@ def main(s):
 
 # %% code
 if __name__ == '__main__':
+
+    globals()['chanel_name'] = input('Enter url of chanel : ')
+    globals()['video_category'] = input('Enter category of videos : ')
+    globals()['username_ifilo'] = 'momtaa'
+    globals()['password_ifilo'] = 'test123321'
+
     main(True)
 
+
+
+else:
+    globals()['video_category'] = 'فیلم و سینما'
+    globals()['chanel_name'] = "https://www.namasha.com/TinTama"
+    globals()['username_ifilo'] = 'momtaa'
+    globals()['password_ifilo'] = 'test123321'
