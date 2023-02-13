@@ -10,6 +10,9 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
+globals()['video_category'] ='فیلم و سینما'
+globals()['chanel_name'] = "https://www.namasha.com/TinTama"
+
 # %% upload
 class TestUpload:
     def setup_method(self, method):
@@ -59,7 +62,7 @@ class TestUpload:
         # 17 | close |  |
         self.driver.close()
 
-# %%
+# %% video
 class TestSaveurl:
     def setup_method(self, method):
         self.driver = webdriver.Chrome('Driver/chromedriver109.exe')
@@ -72,7 +75,11 @@ class TestSaveurl:
         # Test name: save_url
         # Step # | name | target | value
         # 1 | open | /TinTama |
-        self.driver.get(chanel_url)
+        try:
+            self.driver.get(chanel_url)
+        except:
+            return None
+        
         # 2 | setWindowSize | 564x708 |
         self.driver.set_window_size(564, 708)
         # 3 | click | id=load-more-btn |
@@ -105,13 +112,48 @@ class TestSaveurl:
         # 8 | close |  |
         self.driver.close()
 
+    def export_video_data(self, video_url: str):
+        video_data = {'category': globals()['video_category']}
+        try:
+            self.driver.get(video_url)
+        except Exception as e:
+            print(e)
+            return None
+
+        self.driver.fullscreen_window()
+        # downoad url
+        down_selector = 'body > div.container-fluid > main > div > article > div > div:nth-child(2) > div > div.col-lg-7.col-xl-8.px-0.px-lg-3 > div.action-buttons.d-flex.mx-3.mt-2.mt-xl-3.ml-xl-0 > div.col.col-xl-auto.position-relative.ml-xl-3.p-0.order-4.order-lg-3 > div > div > div.scroll-bar.scroll-bar-y.flex-grow-1 > a:nth-child(1)'
+        video_data['down_url'] = self.driver.find_element(By.CSS_SELECTOR, down_selector).get_attribute('href')        
+
+        # des 
+        next_selector = '#video-description-wrapper > button'
+        self.driver.find_element(By.CSS_SELECTOR, next_selector).click()
+        video_data['des'] = self.driver.find_element(By.ID, 'video-desc').text
+
+        # title
+        title_selector = 'body > div.container-fluid > main > div > article > div.row > div:nth-child(2) > div > div.col-lg-7.col-xl-8.px-0.px-lg-3 > div.d-flex.justify-content-between.align-items-start.pt-2.px-3.px-lg-0.mr-lg-3.position-relative > div > h1'
+        video_data['title'] = self.driver.find_element(By.CSS_SELECTOR, title_selector).text
+        
+        return video_data
+    
 # %% main 
 def main():
     # ============================== export url video
     self = TestSaveurl()
     self.setup_method(None)
 
-    video_urls = self.test_saveurl("https://www.namasha.com/TinTama")
+    video_urls = self.test_saveurl(globals()['chanel_name'])
+    self.teardown_method(None)
+
+    for video_url in video_urls:
+        self.setup_method(None)
+        video_data = self.export_video_data(video_url)
+        self.teardown_method(None)
+    # ============================== upload video
+
+
+
+
 # %% code
 if __name__ == '__main__':
     main()
