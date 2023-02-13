@@ -10,7 +10,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-
+# %% upload
 class TestUpload:
     def setup_method(self, method):
         self.driver = webdriver.Chrome('Driver/')
@@ -59,7 +59,7 @@ class TestUpload:
         # 17 | close |  |
         self.driver.close()
 
-
+# %%
 class TestSaveurl:
     def setup_method(self, method):
         self.driver = webdriver.Chrome('Driver/chromedriver109.exe')
@@ -68,15 +68,32 @@ class TestSaveurl:
     def teardown_method(self, method):
         self.driver.quit()
 
-    def test_saveurl(self):
+    def test_saveurl(self, chanel_url: str = "https://www.namasha.com/TinTama"):
         # Test name: save_url
         # Step # | name | target | value
         # 1 | open | /TinTama |
-        self.driver.get("https://www.namasha.com/TinTama")
+        self.driver.get(chanel_url)
         # 2 | setWindowSize | 564x708 |
         self.driver.set_window_size(564, 708)
         # 3 | click | id=load-more-btn |
-        self.driver.find_element(By.ID, "load-more-btn").click()
+        while True:
+            try:
+                self.driver.find_element(By.ID, "load-more-btn").click()
+                time.sleep(0.5)
+            except:
+                break  
+        
+        video_urls = []
+        video_selector = 'body > div.container-fluid > main > div > article > div.row.list-row > div:nth'
+        video_selector = 'body > div.container-fluid > main > div > article > div.row.list-row > div'
+        videos = self.driver.find_elements(By.CSS_SELECTOR, video_selector)
+        for video in videos:
+            url = video.find_element(By.TAG_NAME, 'a')
+            url.get_attribute('title').replace('/', '').replace(' ', '-')+'-720p.mp4'
+            video_urls.append(url.get_attribute('href'))
+        
+        return video_urls
+        base_url_download = 'https://www.namasha.com/videos/dl/7346668488-720p/'
         # 4 | runScript | window.scrollTo(0,13364) |
         self.driver.execute_script("window.scrollTo(0,13364)")
         # 5 | click | css=.list-row |
@@ -88,11 +105,14 @@ class TestSaveurl:
         # 8 | close |  |
         self.driver.close()
 
-
+# %% main 
 def main():
     # ============================== export url video
     self = TestSaveurl()
-    self.setup_method()
+    self.setup_method(None)
 
-
+    video_urls = self.test_saveurl("https://www.namasha.com/TinTama")
+# %% code
+if __name__ == '__main__':
+    main()
 
