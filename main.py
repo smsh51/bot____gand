@@ -31,11 +31,13 @@ class TestUpload:
         pass_selector = '#password'
         self.driver.find_element(By.CSS_SELECTOR, pass_selector).send_keys(globals()['password_ifilo'])
         self.driver.find_element(By.CSS_SELECTOR, 'body > div:nth-child(1) > article > section > div:nth-child(2) > form > button').click()
+        time.sleep(1)
 
         # upload
         self.driver.get('https://ifilo.net/upload')
         # 2 | setWindowSize | 564x708 |
-        self.driver.set_window_size(564, 708)
+        #self.driver.set_window_size(564, 708)
+        self.driver.fullscreen_window()
         # 3 | click | id=tablistItem2 |
         self.driver.find_element(By.ID, "tablistItem2").click()
         # 4 | click | name=tVideoUrl |
@@ -44,6 +46,7 @@ class TestUpload:
         self.driver.find_element(By.NAME, "tVideoUrl").send_keys(video_data['down_url'])
         # 6 | click | id=startUrlUpload |
         self.driver.find_element(By.ID, "startUrlUpload").click()
+        time.sleep(1)
         # 7 | click | css=.ng-invalid |
         self.driver.find_element(By.CSS_SELECTOR, ".ng-invalid").clear()
         # 8 | type | css=.ng-valid-maxlength | عنوان
@@ -189,11 +192,11 @@ if __name__ == '__main__':
 
     def submit():
         global root
-        globals()['video_category'] = name_var.get()
-        globals()['chanel_name'] = passw_var.get()
+        globals()['video_category'] = name_var.get() if (name_var.get() is not None) and (name_var.get() != '') else globals()['video_category']
+        globals()['chanel_name'] = passw_var.get() if (passw_var.get() is not None) and (passw_var.get() != '') else globals()['chanel_name']
 
-        print("The name is : " + globals()['video_category'])
-        print("The password is : " + globals()['chanel_name'])
+        print("The url is : " + globals()['video_category'])
+        print("The categorical is : " + globals()['chanel_name'])
 
         name_var.set("")
         passw_var.set("")
