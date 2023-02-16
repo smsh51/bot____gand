@@ -206,12 +206,12 @@ if __name__ == '__main__':
     name_var = tk.StringVar()
     passw_var = tk.StringVar()
 
-    name_label = tk.Label(root, text='Chanel URL : ', font=('calibre', 10, 'bold'))
+    name_label = tk.Label(root, text='Category : ', font=('calibre', 10, 'bold'))
     # creating a entry for input
     # name using widget Entry
     name_entry = tk.Entry(root, textvariable=name_var, font=('calibre', 10, 'normal'))
     # creating a label for password
-    passw_label = tk.Label(root, text='Category : ', font=('calibre', 10, 'bold'))
+    passw_label = tk.Label(root, text='Chanel URL : ', font=('calibre', 10, 'bold'))
     # creating a entry for password
     passw_entry = tk.Entry(root, textvariable=passw_var, font=('calibre', 10, 'normal'))
     # creating a button using the widget
