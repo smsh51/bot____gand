@@ -170,8 +170,9 @@ def main(s):
     # =========================== up
     self1 = TestUpload()
     # ===========================
-
+    print(len(video_urls))
     for video_url in video_urls:
+        print(video_url)
         self.setup_method(None)
         video_data = self.export_video_data(video_url)
         self.teardown_method(None)
