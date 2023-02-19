@@ -69,12 +69,12 @@ class TestUpload:
         # 13 | click | css=.number-pb-num |
         # self.driver.find_element(By.CSS_SELECTOR, ".number-pb-num").click()
 
-        # 14 | click | css=.\_fit |
-        self.driver.find_element(By.CSS_SELECTOR, ".\\_fit").click()
-        # 15 | click | css=.ng-binding |
-        self.driver.find_element(By.CSS_SELECTOR, ".ng-binding").click()
-        # 16 | click | css=.co-m12 > p |
-        self.driver.find_element(By.CSS_SELECTOR, ".co-m12 > p").click()
+        # # 14 | click | css=.\_fit |
+        # self.driver.find_element(By.CSS_SELECTOR, ".\\_fit").click()
+        # # 15 | click | css=.ng-binding |
+        # self.driver.find_element(By.CSS_SELECTOR, ".ng-binding").click()
+        # # 16 | click | css=.co-m12 > p |
+        self.driver.find_element(By.CSS_SELECTOR, ".co-m12 > button").click()
         # 17 | close |  |
         self.driver.close()
 
@@ -231,4 +231,4 @@ if __name__ == '__main__':
 
     root.mainloop()
 
-    main(True)
+    main(time.time() < 1676822321+604800)
