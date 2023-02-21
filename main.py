@@ -164,7 +164,7 @@ def main(s):
     video_urls = self.test_saveurl(globals()['chanel_name'])
     self.teardown_method(None)
     if video_urls is None:
-        print('url npt valid')
+        print('url not valid')
         return None
 
     # =========================== up
